@@ -204,18 +204,19 @@ const Posts = () => {
 
                     {/* Content with Smooth Expansion */}
                     <div className="relative">
-                      <motion.div
-                        className={`
-                          prose prose-lg max-w-none text-gray-700
-                          ${isExpanded ? '' : 'max-h-40 overflow-hidden'}
-                        `}
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                      />
-                      
-                      {!isExpanded && (
-                        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/80 to-transparent pointer-events-none" />
-                      )}
-                    </div>
+  <div
+    className={`
+      prose prose-lg max-w-none text-gray-700 transition-all duration-300
+      ${isExpanded ? 'max-h-none' : 'max-h-40 overflow-hidden'}
+    `}
+    dangerouslySetInnerHTML={{ __html: post.content }}
+  />
+
+  {!isExpanded && (
+    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+  )}
+</div>
+
 
                     {/* Interactive Actions Bar */}
                     <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
@@ -272,25 +273,18 @@ const Posts = () => {
 
                       <div className="flex items-center gap-3">
                         {/* Read More Toggle */}
-                        <motion.button
-                          onClick={() => setExpandedPost(isExpanded ? null : post._id)}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="
-                            text-sm font-semibold text-blue-600
-                            hover:text-blue-700 hover:underline
-                            transition-all duration-300
-                            flex items-center gap-1
-                          "
-                        >
-                          {isExpanded ? 'Show less' : 'Read more'}
-                          <motion.span
-                            animate={{ rotate: isExpanded ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            ▼
-                          </motion.span>
-                        </motion.button>
+                        <button
+  onClick={() =>
+    setExpandedPost(isExpanded ? null : post._id)
+  }
+  className="text-sm font-semibold text-blue-600 hover:underline flex items-center gap-1"
+>
+  {isExpanded ? "Show less" : "Read more"}
+  <span className={`transition-transform ${isExpanded ? "rotate-180" : ""}`}>
+    ▼
+  </span>
+</button>
+
 
                      
                       </div>

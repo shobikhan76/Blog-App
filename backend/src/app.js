@@ -17,7 +17,14 @@ dotenv.config() ;
 
 
 app.use(helmet()) ;
-app.use(cors()) ;
+app.use(cors({
+    origin: [
+      "http://localhost:5173",
+      "https://blog-name.netlify.app/",
+      "https://blog-app-1-bvsu.onrender.com/"
+    ],
+    credentials: true,
+  })) ;
 app.use(express.json()) ;
 
 // Routes

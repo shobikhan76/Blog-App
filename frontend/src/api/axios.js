@@ -1,9 +1,11 @@
 import axios from "axios";
 
+// Use environment variable, fallback to localhost for dev
 const API = axios.create({
-  baseURL: "http://localhost:5000/api", 
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
+// Request interceptor: add token if exists
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token"); 
@@ -12,16 +14,14 @@ API.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
+// Response interceptor: log errors
 API.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      
       console.error("API Error:", error.response.data.message || error.message);
     } else {
       console.error("API Network Error:", error.message);
