@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+   
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -18,7 +19,6 @@ const Navbar = () => {
         Blog App
       </Link>
 
-      {/* Right Side */}
       <div className="flex gap-4 items-center">
         {!user ? (
           <>

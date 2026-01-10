@@ -1,6 +1,7 @@
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "../api/post.api";
+import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const DeletePost = ({ postId }) => {
@@ -11,24 +12,31 @@ const DeletePost = ({ postId }) => {
     onSuccess: () => {
       toast.success("Post deleted");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["my-posts"] });
     },
-    onError: () => {
-      toast.error("Delete failed");
-    },
+    onError: () => toast.error("Failed to delete post"),
   });
 
   const handleDelete = () => {
-    if (!confirm("Are you sure you want to delete this post?")) return;
-    mutation.mutate();
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      mutation.mutate();
+    }
   };
 
   return (
     <button
       onClick={handleDelete}
-      disabled={mutation.isPending}
-      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+      disabled={mutation.isLoading}
+      className="
+        p-2 text-gray-500 hover:text-red-600 
+        hover:bg-red-50 rounded-lg
+        transition-all duration-200
+        border border-gray-200 hover:border-red-200
+        disabled:opacity-50
+      "
+      title="Delete post"
     >
-      {mutation.isPending ? "Deleting..." : "Delete"}
+      <Trash2 className="w-4 h-4" />
     </button>
   );
 };

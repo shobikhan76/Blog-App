@@ -2,65 +2,98 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../api/post.api";
-import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import "react-quill/dist/quill.snow.css";
 
 const CreatePost = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: () => createPost({ title, content }),
     onSuccess: () => {
-      toast.success("Post created");
+      toast.success("Post created!");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      onClose(); // close modal on success
-      
+      queryClient.invalidateQueries({ queryKey: ["my-posts"] });
+      setTitle("");
+      setContent("");
+      onClose();
     },
-    onError: () => toast.error("Create failed"),
+    onError: () => toast.error("Failed to create post"),
   });
 
-  if (!isOpen) return null; // Important: don't render if modal is closed
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          mutation.mutate();
-        }}
-        className="bg-white p-6 rounded w-full max-w-lg"
+    <div 
+      className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold mb-4">Create Post</h2>
-
-        <input
-          className="border p-2 mb-3 w-full"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          required
-        />
-        <ReactQuill value={content} onChange={setContent} />
-
-        <div className="mt-4 flex justify-end gap-2">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900">Create New Post</h2>
           <button
-            type="button"
             onClick={onClose}
-            className="px-4 py-2 border rounded"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={mutation.isLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            {mutation.isLoading ? "Creating..." : "Create"}
+            <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
-      </form>
+
+        {/* Form */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            mutation.mutate();
+          }}
+          className="p-4 space-y-4 overflow-y-auto max-h-[calc(90vh-120px)]"
+        >
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Post title..."
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+            required
+          />
+          
+          <div className="border border-gray-300 rounded-lg overflow-hidden">
+            <ReactQuill 
+              value={content} 
+              onChange={setContent}
+              className="h-64"
+              placeholder="Write your post content..."
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={mutation.isLoading || !title || !content}
+              className="
+                px-6 py-2 bg-blue-600 text-white rounded-lg
+                hover:bg-blue-700 disabled:opacity-50
+                transition-colors font-medium
+              "
+            >
+              {mutation.isLoading ? "Creating..." : "Create Post"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
