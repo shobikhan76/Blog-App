@@ -10,16 +10,27 @@ const CreatePost = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const queryClient = useQueryClient();
+  const [image , setImage ] = useState(null)
 
   const mutation = useMutation({
-    mutationFn: () => createPost({ title, content }),
+   mutationFn: () => {
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("content", content);
+  if (image) formData.append("image", image);
+
+  return createPost(formData);
+},
+
     onSuccess: () => {
       toast.success("Post created!");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["my-posts"] });
       setTitle("");
       setContent("");
+      setImage(null)
       onClose();
+      
     },
     onError: () => toast.error("Failed to create post"),
   });
@@ -71,6 +82,23 @@ const CreatePost = ({ isOpen, onClose }) => {
               placeholder="Write your post content..."
             />
           </div>
+          <input
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  }}
+  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+/>
+{image && (
+  <img
+    src={URL.createObjectURL(image)}
+    alt="Preview"
+    className="w-32 h-32 object-cover mt-2 rounded"
+  />
+)}
 
           <div className="flex justify-end gap-3 pt-4">
             <button

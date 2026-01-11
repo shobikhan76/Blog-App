@@ -78,16 +78,7 @@ const Posts = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
                 >
-                  {/* Meta row */}
-                  <div className="px-6 pt-5 pb-2 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500">
-                    <div className="flex items-center gap-3">
-                      <span className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
-                        {post.category || "General"}
-                      </span>
-                      <span>{readingTime} min read</span>
-                    </div>
-                    <span>{formatDate(post.createdAt)}</span>
-                  </div>
+                  
 
                   {/* Title */}
                   <h2

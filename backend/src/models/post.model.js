@@ -7,6 +7,15 @@ const postSchema = new mongoose.Schema(
       required: [true, "Title is required"],
       trim: true,
     },
+    image: {
+      type: String , 
+      default : null 
+
+    } , 
+    image : {
+      type: String , 
+    
+    } ,
     content: {
       type: String, // Store rich text as HTML/string
       required: [true, "Content is required"],

@@ -97,6 +97,15 @@ const PostCard = ({ post, onEdit, formatDate, getReadingTime }) => {
         <div className="flex justify-between items-start gap-4">
           {/* Post Content */}
           <div className="flex-1 min-w-0">
+            {/* Post Image */}
+   {post.image && (
+  <img
+    src={post.image}
+    alt={post.title}
+    className="w-full h-48 object-cover rounded-lg mb-4"
+  />
+   )}
+
             <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
               {post.title}
             </h4>
