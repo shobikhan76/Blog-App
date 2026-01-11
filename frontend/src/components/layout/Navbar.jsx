@@ -4,7 +4,6 @@ import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-   
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -14,11 +13,14 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center">
-      {/* Logo */}
-      <Link to="/" className="text-xl font-bold">
-        Blog App
-      </Link>
+      {/* Logo (only visible if user is not logged in) */}
+      {!user && (
+        <Link to="/" className="text-xl font-bold">
+          Blog App
+        </Link>
+      )}
 
+      {/* Navigation Buttons */}
       <div className="flex gap-4 items-center">
         {!user ? (
           <>
@@ -37,7 +39,6 @@ const Navbar = () => {
           </>
         ) : (
           <>
-           
             <button
               onClick={handleLogout}
               className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition"

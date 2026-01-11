@@ -78,6 +78,14 @@ const Posts = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
                 >
+                  {post.image && (
+  <img
+    src={post.image}
+    alt={post.title}
+    className="w-full h-48 object-cover rounded-lg mb-4"
+  />
+   )}
+
                   
 
                   {/* Title */}
